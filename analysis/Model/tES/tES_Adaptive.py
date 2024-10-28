@@ -2,7 +2,7 @@ import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 import os
-
+import pandas as pd
 class tES_Adaptive:
     """
     This class works for both binary/weighted directed/undirected networks.
@@ -18,7 +18,10 @@ class tES_Adaptive:
                  dt=0.01, 
                  plot_bifurcation=False, 
                  epochs_per_lambda_o=10000, 
-                 step_size_lambda_o=0.003):
+                 step_size_lambda_o=0.003,
+                 loc_order=[],
+                 df_loc=pd.DataFrame()
+                ):              
         """
         Initialize the ES_Adaptive class with the provided parameters.
 
@@ -44,6 +47,9 @@ class tES_Adaptive:
         self.plot_bifurcation = plot_bifurcation
         self.epochs_per_lambda_o = epochs_per_lambda_o
         self.step_size_lambda_o = step_size_lambda_o
+        self.loc_order=loc_order 
+        self.df_loc = df_loc
+        
         
         self.prepare_matrices()
         self.initialize()
@@ -85,6 +91,7 @@ class tES_Adaptive:
         self.LAMBDA_ = np.zeros([self.N, self.NEPOCHS])
         self.LAMBDA_ = []
         self.LAMBDA_O_ = []
+        self.loc_order=[]
 
         for i in range(self.NEPOCHS):
             
@@ -95,7 +102,9 @@ class tES_Adaptive:
                     print(f'\nLAMBDA_O={self.LAMBDA_O}, Global Order (R)={self.GLOBAL_ORDER}\n')
             
             if i%2000 == 0:
-                print(f'LAMBDA_O={self.LAMBDA_O}, Global Order(R)={self.GLOBAL_ORDER}')
+                #print(f'LAMBDA_O={self.LAMBDA_O}, Global Order(R)={self.GLOBAL_ORDER}')
+                pass
+                
             
             wts = np.sum(np.multiply(self.A.T, np.sin(self.THETA.T - self.THETA)), axis=1)
             coupling = np.multiply(self.LAMBDA, np.multiply(self.ADAPTIVE_COUPLING, wts))
@@ -107,7 +116,10 @@ class tES_Adaptive:
             self.LAMBDA = self.LAMBDA + dLAMBDA
             
             self.SetLocalOrder()
+            self.loc_order.append(list(np.asarray(self.LOCAL_ORDER)))
+            
             self.SetGlobalOrder()
+            
 
             # Update adaptive coupling weight
             self.ADAPTIVE_COUPLING[:] = self.LOCAL_ORDER
@@ -117,12 +129,25 @@ class tES_Adaptive:
             
         print(self.GLOBAL_ORDER)
 
+        
+        self.df_loc=pd.DataFrame(self.loc_order)
+        self.df_loc=self.df_loc.astype(float)
+        self.df_loc=self.df_loc.T
+
+            #self.df_loc=pd.concat([self.df_loc,pd.DataFrame(el)], axis=1)
+        #df_loc.to_csv('local_order.csv')
+        
+   
+        
+        
     def SetLocalOrder(self):
         E = np.exp(1j * self.THETA)
         K_ = 1 / self.K
         K_[K_ == np.inf] = 0
         R = np.multiply(K_, np.matmul(self.UNDIRECTED_A, E))
         self.LOCAL_ORDER = np.absolute(R)
+        
+        
 
     def SetGlobalOrder(self):
         E = np.exp(1j * self.THETA)

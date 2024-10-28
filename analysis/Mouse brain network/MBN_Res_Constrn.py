@@ -31,6 +31,7 @@ class MBN_RC(tES_Adaptive, DataUtils):
         self.plot_bifurcation = plot_bifurcation
         self.epochs_per_lambda_o = epochs_per_lambda_o
         self.step_size_lambda_o = step_size_lambda_o
+        # processing.py (ES_Adaptive class definition)
         self.alpha = alpha
         self.beta = beta
         
@@ -53,15 +54,17 @@ class MBN_RC(tES_Adaptive, DataUtils):
         self.A = np.zeros([self.N, self.N]) 
         self.A[:] = self.WHOLE_BRAIN_CONN 
         self.A = np.mat(self.A)
+
         
+
         # Create graph object from adjacency matrix
         self.G = nx.from_numpy_array(self.A)
         self.avg_degree = (sum(dict(self.G.degree()).values())/self.N)
         self.A = np.mat(nx.adjacency_matrix(self.G).todense())
         np.fill_diagonal(self.A, 0)
         
-        print("Average shortest path length: ", nx.average_shortest_path_length(self.G))
-        print("Avg clustering coefficient: ", nx.average_clustering(self.G))
+        #print("Average shortest path length: ", nx.average_shortest_path_length(self.G))
+        #print("Avg clustering coefficient: ", nx.average_clustering(self.G))
 
     def run_model(self):
         tES_Adaptive.run_model(self)
