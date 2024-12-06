@@ -132,11 +132,7 @@ class tES_Adaptive:
         
         self.df_loc=pd.DataFrame(self.loc_order)
         self.df_loc=self.df_loc.astype(float)
-        self.df_loc=self.df_loc.T
-
-            #self.df_loc=pd.concat([self.df_loc,pd.DataFrame(el)], axis=1)
-        #df_loc.to_csv('local_order.csv')
-        
+        self.df_loc=self.df_loc.T       
    
         
         
