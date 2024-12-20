@@ -8,24 +8,27 @@ from scipy import signal
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 import pickle
+import sys
 import os
 import networkx as nx
 from pathlib import Path  
         
 class DataUtils:
     
-    # BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Get the directory of this script
-    INTER_REGION_CONN_FILE=Path("data") / "processed" / "ipsilateral_original_conn_filtered.csv"
-    INTER_REGION_PVAL_FILE = Path("data") / "processed" /'inter_region_p_value_filtered.csv'
+    #BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Get the directory of this script
+    #: str=os.path.join('data','connect','inter_region_conn_filtered.csv')
+    data_folder=Path("D:/srg_tES/srg-tes-epilepsy-models/data/connect/")                  
+    INTER_REGION_CONN_FILE = data_folder / "inter_region_conn_filtered.csv"
+    INTER_REGION_PVAL_FILE = data_folder / "inter_region_p_value_filtered.csv"
 
-    INTER_REGION_CONN_FILE_IPSI = Path("data") / "processed" / 'ipsilateral_original_conn_filtered.csv'
-    INTER_REGION_PVAL_FILE_IPSI = Path("data") / "processed" / 'ipsilateral_original_p_val_unlabelled.csv'
+    INTER_REGION_CONN_FILE_IPSI = data_folder / 'ipsilateral_original_conn_filtered.csv'
+    INTER_REGION_PVAL_FILE_IPSI = data_folder / 'ipsilateral_original_p_val_unlabelled.csv'
 
-    INTER_REGION_CONN_FILE_CONTRA = Path("data") / "processed" / 'contralateral_original_conn_filtered.csv'
-    INTER_REGION_PVAL_FILE_CONTRA = Path("data") / "processed" /  'contralateral_original_p_val_unlabelled.csv'
+    INTER_REGION_CONN_FILE_CONTRA = data_folder / 'contralateral_original_conn_filtered.csv'
+    INTER_REGION_PVAL_FILE_CONTRA = data_folder / 'contralateral_original_p_val_unlabelled.csv'
 
-    MB_WB_REGION_COMMUNITY_FILE = Path("data") / "processed" / 'mb_communities.npz'
-    MB_WB_REGION_COMMUNITY_DICT_FILE = Path("data") / "processed" / 'mb_communities_dict.pickle'
+    MB_WB_REGION_COMMUNITY_FILE = data_folder / 'mb_communities.npz'
+    MB_WB_REGION_COMMUNITY_DICT_FILE = data_folder / 'mb_communities_dict.pickle'
     
     # INTER_REGION_CONN_FILE = os.path.join(BASE_DIR, 'inter_region_conn_filtered.csv')
     # INTER_REGION_PVAL_FILE = os.path.join(BASE_DIR, 'inter_region_p_value_filtered.csv')
@@ -264,12 +267,12 @@ class DataUtils:
                  arr2=np.array(self.N_COMMUNITIES))
         
     def init_inter_region_connectivity(self):
-        file = open(DataUtils.INTER_REGION_CONN_FILE)
+        file=open(DataUtils.INTER_REGION_CONN_FILE)
         csvreader = csv.reader(file)
         rows = []
         for row in csvreader:
                 rows.append(row)
-        rows = np.array(rows);
+        rows = np.array(rows)
         file.close()
         
         #Connectivity matrix normalized between 0 and 1
