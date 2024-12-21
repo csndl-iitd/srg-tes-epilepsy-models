@@ -16,6 +16,7 @@ from pathlib import Path
 class DataUtils:
     
     # change data_folder path accordingly
+    # On cloud server, use relative paths
     data_folder=Path("D:/srg_tES/srg-tes-epilepsy-models/data/connectivity_matrix/")    
        
     INTER_REGION_CONN_FILE = data_folder / "inter_region_conn_filtered.csv"

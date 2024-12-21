@@ -161,3 +161,6 @@ cython_debug/
 
 env_tes
 
+*.csv
+*.bz2
+*.pkl
