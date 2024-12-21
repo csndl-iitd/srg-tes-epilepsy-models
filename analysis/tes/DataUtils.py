@@ -15,9 +15,9 @@ from pathlib import Path
         
 class DataUtils:
     
-    #BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Get the directory of this script
-    #: str=os.path.join('data','connect','inter_region_conn_filtered.csv')
-    data_folder=Path("D:/srg_tES/srg-tes-epilepsy-models/data/connect/")                  
+    # change data_folder path accordingly
+    data_folder=Path("D:/srg_tES/srg-tes-epilepsy-models/data/connectivity_matrix/")    
+       
     INTER_REGION_CONN_FILE = data_folder / "inter_region_conn_filtered.csv"
     INTER_REGION_PVAL_FILE = data_folder / "inter_region_p_value_filtered.csv"
 
@@ -30,17 +30,6 @@ class DataUtils:
     MB_WB_REGION_COMMUNITY_FILE = data_folder / 'mb_communities.npz'
     MB_WB_REGION_COMMUNITY_DICT_FILE = data_folder / 'mb_communities_dict.pickle'
     
-    # INTER_REGION_CONN_FILE = os.path.join(BASE_DIR, 'inter_region_conn_filtered.csv')
-    # INTER_REGION_PVAL_FILE = os.path.join(BASE_DIR, 'inter_region_p_value_filtered.csv')
-    
-    # INTER_REGION_CONN_FILE_IPSI = os.path.join(BASE_DIR, 'ipsilateral_original_conn_filtered.csv')
-    # INTER_REGION_PVAL_FILE_IPSI = os.path.join(BASE_DIR, 'ipsilateral_original_p_val_unlabelled.csv')
-    
-    # INTER_REGION_CONN_FILE_CONTRA = os.path.join(BASE_DIR, 'contralateral_original_conn_filtered.csv')
-    # INTER_REGION_PVAL_FILE_CONTRA = os.path.join(BASE_DIR, 'contralateral_original_p_val_unlabelled.csv')
-    
-    # MB_WB_REGION_COMMUNITY_FILE = os.path.join(BASE_DIR, 'mb_communities.npz')
-    # MB_WB_REGION_COMMUNITY_DICT_FILE = os.path.join(BASE_DIR, 'mb_communities_dict.pickle')
     
     DATASTORE = '/home/jupyter-avinash/datastore/allen_mouse_eeg'
     MOUSE = 'mouse599975'
