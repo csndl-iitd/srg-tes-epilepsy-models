@@ -10,6 +10,7 @@ class DataRead:
     1. data_read_bz2(filename): To read .bz2 file
     2. data_read_pkl(filename): To read .pkl file
     3. data_read_csv(filename): To read .csv file
+    4. ext_node_community(df,th,filename): To extract node community for given local order data
 
     """
 
@@ -42,7 +43,7 @@ class DataRead:
             df (dataframe): MultiIndex dataframe of local order data with 'level 0' index as iteration number.
             th (float): Local Synchrony Order threshold
             filename (string): Name of file to store node community data
-        """    
+        """
         mbn = MBN_RC()
         # reset index values as it is a multi-index dataframe
         df_reset = df.reset_index()
@@ -61,7 +62,9 @@ class DataRead:
             if df_dum.shape[1] / 426 == 1:
                 tr_count += 1
                 local_order = df_dum.values
-                scta = SCTA(mbn.binary_conn, local_order, local_order_phase=None, sync_thrsh=th)
+                scta = SCTA(
+                    mbn.binary_conn, local_order, local_order_phase=None, sync_thrsh=th
+                )
                 scta.track_clusters()
                 scta.update_synchronization_cluster_stats()
                 df_ncdum = pd.DataFrame(scta.node_communities)
@@ -88,7 +91,7 @@ class DataRead:
                         mbn.binary_conn,
                         local_order,
                         local_order_phase=None,
-                        sync_thrsh=th
+                        sync_thrsh=th,
                     )
                     scta.track_clusters()
                     scta.update_synchronization_cluster_stats()
@@ -105,4 +108,4 @@ class DataRead:
 
         nc_path = self.main_data_dir / filename
         df_nc.to_pickle(nc_path, compression="bz2")
-        print('Stored node communities data in data folder')
+        print("Stored node communities data in data folder")
