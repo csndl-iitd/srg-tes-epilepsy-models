@@ -69,9 +69,9 @@ class MBN_RC(tES_Adaptive, DataUtils):
         #self.A[326,:]=0
         #print("Average shortest path length: ", nx.average_shortest_path_length(self.G))
         #print("Avg clustering coefficient: ", nx.average_clustering(self.G))
-        bet_cent = nx.betweenness_centrality(self.G)
-        bet_cent_sort={k: v for k, v in sorted(bet_cent.items(), key=lambda item: item[1],reverse=True)}
-        print("Between centrality:", bet_cent_sort)
+        # bet_cent = nx.betweenness_centrality(self.G)
+        # bet_cent_sort={k: v for k, v in sorted(bet_cent.items(), key=lambda item: item[1],reverse=True)}
+        # print("Between centrality:", bet_cent_sort)
 
     def run_model(self):
         tES_Adaptive.run_model(self)

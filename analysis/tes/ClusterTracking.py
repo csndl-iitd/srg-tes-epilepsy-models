@@ -2,6 +2,7 @@ import numpy as np
 import random
 from collections import deque
 
+
 class SCTA:
     """
     Synchronization Cluster Tracking Algorithm
@@ -59,6 +60,7 @@ class SCTA:
         central_nodes = [node_list[idx] for idx in top_indices]
         return central_nodes
     
+  
     def track_clusters(self):
         thr = self.sync_thrsh
         NODE_COMMUNITIES = np.zeros([self.window_size, self.N]) 

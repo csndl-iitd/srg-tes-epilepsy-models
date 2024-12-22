@@ -129,7 +129,7 @@ class tES_Adaptive:
             
         print(self.GLOBAL_ORDER)
 
-        
+        #to store local order data
         self.df_loc=pd.DataFrame(self.loc_order)
         self.df_loc=self.df_loc.astype(float)
         self.df_loc=self.df_loc.T       
