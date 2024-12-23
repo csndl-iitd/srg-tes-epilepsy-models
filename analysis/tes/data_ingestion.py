@@ -16,6 +16,7 @@ class DataRead:
     5. ext_global_order(itr_c,itr_filename,loc_filename): To extract global and local order automatically
 
     """
+
     # change main_data_dir path accordingly
     main_data_dir = Path("D:\srg_tES\srg-tes-epilepsy-models\data")
 
@@ -113,25 +114,20 @@ class DataRead:
         df_nc.to_pickle(nc_path, compression="bz2")
         print("Stored node communities data in data folder")
 
+
     def ext_global_order(self, itr_c, itr_filename, loc_filename):
-        """Stores Global Order Data and Local Order Data for given number of simulations in data folder.
-        Returns list of iteration numbers which had transitions.
+        """
+        Stores Global Order Data and Local Order Data for given number of simulations in data folder.
 
         Args:
-            itr_c (integer): Input count of simulations 
+            itr_c (integer): Input count of simulations
             itr_filename (string): filename (.bz2) to store global order data
             loc_filename (string): filename (.bz2) to store local order data
-
-        Returns:
-            list : Contains iteration numbers which had transition
-        """    
-        
+        """
         # create object of class AnalysisFunc
         analysis = AnalysisFunc()
         # create variable to count number of transitions
-        trans_count=0
-        # create list to store iteration number which have transitions
-        itr_trans_num=[]
+        trans_count = 0
 
         # put itr as number of iterations you want
         itr = itr_c
@@ -169,43 +165,58 @@ class DataRead:
             df_itr.to_pickle(itr_path, compression="bz2")
 
             df_na = analysis.smooth(df)
-            trans=analysis.trans_state_time(df_na,mbn.dt)
-            if trans['num']>=1:
-                data = np.array(df_na)
+            data = np.array(df_na)
+            while True:
 
-                # Extracting local order data for above iteration
-                df_dum = pd.DataFrame()
-                # defining local order data timestep thresholds
+                index_arr = np.where(data >= 0.4)[0]
 
-                # checking where it crossed 0.3
-                m_loc = np.where(data >= 0.3)[0][0]
+                # Finding if iteration has a transition
+                if index_arr.size > 0:
+                    trans_count += 1
 
-                lt_loc = m_loc - 3000
-                ut_loc = m_loc + 2000
+                    upper_crossing = index_arr[0]
+                    # Extracting local order data for above iteration
+                    df_dum = pd.DataFrame()
+                    # defining local order data timestep thresholds
 
-                # extracting data from df_loc
-                header_list = list(range(lt_loc, ut_loc))
-                # filtering those columns which lie in between 0 to mbn.nepochs
-                header_list_f = [x for x in header_list if 0 <= x < mbn.nepochs]
-                df_dum = mbn.df_loc[header_list_f]
-                # changing column numbers so that they be concated 1 below other
-                df_dum.columns = range(0, df_dum.shape[1])
+                    # checking where it crossed 0.3
+                    m_loc = np.where(data >= 0.3)[0][0]
 
-                # creating multi-index dataframe
-                index = [[c] * 426, list(range(0, 426))]
-                df_dum = df_dum.set_index(index)
-                df_loc_data = pd.concat([df_loc_data, df_dum])
-                trans_count+=trans["num"]
-                itr_trans_num.append(c)
+                    lt_loc = m_loc - 3000
+                    ut_loc = m_loc + 2000
 
-                # increasing count by 1
-                c += 1
-            else:
-                c+=1
+                    # extracting data from df_loc
+                    header_list = list(range(lt_loc, ut_loc))
+                    # filtering those columns which lie in between 0 to mbn.nepochs
+                    header_list_f = [x for x in header_list if 0 <= x < mbn.nepochs]
+                    df_dum = mbn.df_loc[header_list_f]
+                    # changing column numbers so that they be concated 1 below other
+                    df_dum.columns = range(0, df_dum.shape[1])
 
+                    # creating multi-index dataframe
+                    index = [[c] * 426, list(range(0, 426))]
+                    df_dum = df_dum.set_index(index)
+                    df_loc_data = pd.concat([df_loc_data, df_dum])
+                    # checking for another transition
+                    fwd_data = np.array(data[upper_crossing:])
+
+                    check = np.where(fwd_data <= 0.2)[0]
+
+                    if check.size > 0:
+                        ind = np.where(fwd_data <= 0.1)[0]
+                        if ind.size > 0:
+                            lower_crs = ind[0]
+                            lower_crs_up = lower_crs + upper_crossing
+                            data = np.array(data[lower_crs_up:])
+                        else:
+                            break
+                    else:
+                        break
+                else:
+                    break
+            c += 1
         loc_path = self.main_data_dir / loc_filename
         df_loc_data = df_loc_data.astype(np.float32)
         df_loc_data.to_pickle(loc_path, compression="bz2")
-        print('Stored Global Order data and Local order data in data folder')
-        print(f'Number of transitions is {trans_count}')
-        return itr_trans_num
+        print("Stored Global Order data and Local order data in data folder")
+        print(f"Number of transitions is {trans_count}")
