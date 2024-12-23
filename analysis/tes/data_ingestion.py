@@ -13,10 +13,10 @@ class DataRead:
     2. data_read_pkl(filename): To read .pkl file
     3. data_read_csv(filename): To read .csv file
     4. ext_node_community(df,th,filename): To extract node community for given local order data
-    5. ext_global_order()
+    5. ext_global_order(itr_c,itr_filename,loc_filename): To extract global and local order automatically
 
     """
-
+    # change main_data_dir path accordingly
     main_data_dir = Path("D:\srg_tES\srg-tes-epilepsy-models\data")
 
     def data_read_bz2(self, filename):
@@ -114,7 +114,8 @@ class DataRead:
         print("Stored node communities data in data folder")
 
     def ext_global_order(self, itr_c, itr_filename, loc_filename):
-        """Stores Global Order Data and Local Order Data for given number of simulations in data folder
+        """Stores Global Order Data and Local Order Data for given number of simulations in data folder.
+        Returns list of iteration numbers which had transitions.
 
         Args:
             itr_c (integer): Input count of simulations 
