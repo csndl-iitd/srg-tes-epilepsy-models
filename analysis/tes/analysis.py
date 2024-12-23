@@ -25,14 +25,15 @@ class AnalysisFunc:
         return df_na
 
     def trans_state_time(self, df, dt):
-        """Counts the number of transitions, transition time and time spent in synchronised state. The lower threshold is 0.1 and upper threshold is 0.4.
+        """Counts the number of transitions, transition time and time spent in synchronised state. 
+        The lower threshold is 0.1 and upper threshold is 0.4.
 
         Args:
             df (dataframe): Smooth dataframe of global order
             dt (float): Timestep taken for the simulation
 
         Returns:
-            dictionary: number of transitions, Transition time, Sync time if any
+            dictionary: number of transitions, Transition time, Avg Sync time if any
         """
 
         data = np.array(df)
@@ -87,6 +88,10 @@ class AnalysisFunc:
                 break
         # counts number of transitions
         num = len(trans_time)
+        # Average state time
+        if len(state_time)>1:
+            state_time=sum(state_time)/len(state_time)
+        
         keys = ["num", "trans_time", "state_time"]
         values = [num, trans_time, state_time]
 
