@@ -5,7 +5,8 @@ import numpy as np
 class AnalysisFunc:
     """This class contains functions to use for analysis.
     1. smooth(df) to smooth global order data
-    2. trans_state_time(df,dt) to calculate number of transitions, it's time and sync time
+    2. trans_state_time(df,dt) to calculate number of transitions, it's time and sync time for agiven simulation
+    3. compute_params(df,dt) to calculate above parameters for n iterations
 
     """
 
@@ -25,7 +26,7 @@ class AnalysisFunc:
         return df_na
 
     def trans_state_time(self, df, dt):
-        """Counts the number of transitions, transition time and time spent in synchronised state. 
+        """Counts the number of transitions, transition time and time spent in synchronised state for a given one global order dataframe.
         The lower threshold is 0.1 and upper threshold is 0.4.
 
         Args:
@@ -33,7 +34,7 @@ class AnalysisFunc:
             dt (float): Timestep taken for the simulation
 
         Returns:
-            dictionary: number of transitions, Transition time, Avg Sync time if any
+            dictionary: number of transitions 'num', Transition time 'trans_time', Avg Sync time 'state_time' if any
         """
 
         data = np.array(df)
@@ -89,11 +90,58 @@ class AnalysisFunc:
         # counts number of transitions
         num = len(trans_time)
         # Average state time
-        if len(state_time)>1:
-            state_time=sum(state_time)/len(state_time)
-        
+        if len(state_time) >= 1:
+            state_time = sum(state_time) / len(state_time)
+
         keys = ["num", "trans_time", "state_time"]
         values = [num, trans_time, state_time]
 
         trans_dict = dict(zip(keys, values))
         return trans_dict
+
+    def compute_param(self, df, dt):
+        """
+        Takes dataframe (timesteps x n) of global order for n itertaions as input and computes
+        number of transition per 100 iteration, transition time and time spent in sync state.
+        Also prints iteration number with transition times and sync time for exploration.
+
+        Args:
+            df (dataframe): timesteps x iteration count
+            dt (timestep): simulation timestep
+
+        Returns:
+            dictionary: keys - ['tran_per','trans','sync']
+        """
+        i = 0
+        num = 0
+        tran_per = []
+        trans = []
+        sync = []
+        itr_st = []
+        itr_tran = []
+        while i < df.shape[1]:
+            df.columns = list(range(0, df.shape[1]))
+            num_tran_sync = self.trans_state_time(self.smooth(df[i]), dt)
+            num += num_tran_sync["num"]
+            if i % 100 == 0 or i == df.shape[1] - 1:
+                tran_per.append(num)
+            if num_tran_sync["trans_time"]:
+                itr_tran.append(i)
+                for val in num_tran_sync["trans_time"]:
+                    trans.append(val)
+            if num_tran_sync["state_time"]:
+                itr_st.append(i)
+                sync.append(num_tran_sync["state_time"])
+            i += 1
+        sync_itr = dict(zip(itr_st, sync))
+        tran_itr = dict(zip(itr_tran, trans))
+        # print(trans)
+        # print(sync)
+        # print(num)
+        print(tran_per)
+        print(tran_itr)
+        print(sync_itr)
+        keys = ["tran_per", "trans", "sync"]
+        values = [tran_per, trans, sync]
+        param_dict = dict(zip(keys, values))
+        return param_dict
