@@ -11,6 +11,7 @@ class DataRead:
     """This class contains functions to read data from files.
     1. data_read_bz2(filename): To read .bz2 file
     2. data_read_pkl(filename): To read .pkl file
+    3. data_dump_pkl(filename,data): To dump .pkl file
     3. data_read_csv(filename): To read .csv file
     4. ext_node_community(df,th,filename): To extract node community for given local order data
     5. ext_global_order(itr_c,itr_filename,loc_filename): To extract global and local order automatically
@@ -18,7 +19,7 @@ class DataRead:
     """
 
     # change main_data_dir path accordingly
-    main_data_dir = Path("D:\srg_tES\srg-tes-epilepsy-models\data")
+    main_data_dir = Path("..\..\data")
 
     def data_read_bz2(self, filename):
 
@@ -31,6 +32,11 @@ class DataRead:
         with open(pkl_path, "rb") as f:
             pkl = pickle.load(f)
         return pkl
+    
+    def data_dump_pkl(self,filename,data):
+        pkl_path=self.main_data_dir /filename
+        with open(pkl_path,'wb') as f:
+            pickle.dump(data,f)
 
     def data_read_csv(self, filename):
         csv_path = self.main_data_dir / filename

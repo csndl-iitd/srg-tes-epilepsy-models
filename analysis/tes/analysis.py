@@ -7,6 +7,7 @@ class AnalysisFunc:
     1. smooth(df) to smooth global order data
     2. trans_state_time(df,dt) to calculate number of transitions, it's time and sync time for agiven simulation
     3. compute_params(df,dt) to calculate above parameters for n iterations
+    4. gives time units for X axis ticks to plot global order
 
     """
 
@@ -145,3 +146,20 @@ class AnalysisFunc:
         values = [tran_per, trans, sync]
         param_dict = dict(zip(keys, values))
         return param_dict
+    
+    def get_time(self,df,dt):
+        """Takes the global order dataframe, smooths it and gives time for X axis accordingly.
+        Use it for plots.
+
+        Args:
+            df (dataframe): Global Order Dataframe timesteps x 1 eg. 40000 x 1
+            dt (float): timestep
+
+        Returns:
+            list: time unit values for X axis
+        """        
+        df_smooth=self.smooth(df)
+        time_steps_na = list(range(0,df_smooth.shape[0])) 
+        time = np.multiply(time_steps_na,dt)
+        return [time]
+
