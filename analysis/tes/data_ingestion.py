@@ -15,6 +15,7 @@ class DataRead:
     3. data_read_csv(filename): To read .csv file
     4. ext_node_community(df,th,filename): To extract node community for given local order data
     5. ext_global_order(itr_c,itr_filename,loc_filename): To extract global and local order automatically
+    6. get_communities()
 
     """
 
@@ -32,11 +33,11 @@ class DataRead:
         with open(pkl_path, "rb") as f:
             pkl = pickle.load(f)
         return pkl
-    
-    def data_dump_pkl(self,filename,data):
-        pkl_path=self.main_data_dir /filename
-        with open(pkl_path,'wb') as f:
-            pickle.dump(data,f)
+
+    def data_dump_pkl(self, filename, data):
+        pkl_path = self.main_data_dir / filename
+        with open(pkl_path, "wb") as f:
+            pickle.dump(data, f)
 
     def data_read_csv(self, filename):
         csv_path = self.main_data_dir / filename
@@ -120,7 +121,6 @@ class DataRead:
         df_nc.to_pickle(nc_path, compression="bz2")
         print("Stored node communities data in data folder")
 
-
     def ext_global_order(self, itr_c, itr_filename, loc_filename):
         """
         Stores Global Order Data and Local Order Data for given number of simulations in data folder.
@@ -172,6 +172,11 @@ class DataRead:
 
             df_na = analysis.smooth(df)
             data = np.array(df_na)
+
+            data_indices = np.arange(len(data))
+            # flag to skip first transition
+            flag = 0
+
             while True:
 
                 index_arr = np.where(data >= 0.4)[0]
@@ -188,8 +193,15 @@ class DataRead:
                     # checking where it crossed 0.3
                     m_loc = np.where(data >= 0.3)[0][0]
 
-                    lt_loc = m_loc - 3000
-                    ut_loc = m_loc + 2000
+                    # Update crossing according to data indices
+                    if flag == 0:
+
+                        lt_loc = m_loc - 3000
+                        ut_loc = m_loc + 2000
+                    else:
+                        upd_m_loc = m_loc + data_indices[0]
+                        lt_loc = upd_m_loc - 3000
+                        ut_loc = upd_m_loc + 2000
 
                     # extracting data from df_loc
                     header_list = list(range(lt_loc, ut_loc))
@@ -204,16 +216,18 @@ class DataRead:
                     df_dum = df_dum.set_index(index)
                     df_loc_data = pd.concat([df_loc_data, df_dum])
                     # checking for another transition
-                    fwd_data = np.array(data[upper_crossing:])
+                    data = np.array(data[upper_crossing:])
+                    data_indices = data_indices[upper_crossing:]
 
-                    check = np.where(fwd_data <= 0.2)[0]
+                    check = np.where(data <= 0.2)[0]
 
                     if check.size > 0:
-                        ind = np.where(fwd_data <= 0.1)[0]
+                        ind = np.where(data <= 0.1)[0]
                         if ind.size > 0:
                             lower_crs = ind[0]
-                            lower_crs_up = lower_crs + upper_crossing
-                            data = np.array(data[lower_crs_up:])
+                            data = np.array(data[lower_crs:])
+                            data_indices = data_indices[lower_crs:]
+                            flag += 1
                         else:
                             break
                     else:
@@ -226,3 +240,29 @@ class DataRead:
         df_loc_data.to_pickle(loc_path, compression="bz2")
         print("Stored Global Order data and Local order data in data folder")
         print(f"Number of transitions is {trans_count}")
+
+    def get_communities(self):
+        """Gives nodes arranged as per communities.
+         0:'MO', 1:'MID', 2:'VIS', 3:'ORB', 4:'HTh', 5:'HIND', 6:'OLF', 7:'HIPP'
+
+        Returns:
+            Series: Pandas Series index as node number and community as value
+        """
+        l_communities = self.data_read_pkl(
+            "connectivity_matrix/mb_communities_dict.pickle"
+        )
+        community_names = {
+            0: "MO",
+            1: "MID",
+            2: "VIS",
+            3: "ORB",
+            4: "HTh",
+            5: "HIND",
+            6: "OLF",
+            7: "HIPP",
+        }
+        communities = {community_names[i]: v for i, v in l_communities.items()}
+        community_map = pd.concat(
+            [pd.Series(data=k, index=v) for k, v in communities.items()]
+        )
+        return community_map
