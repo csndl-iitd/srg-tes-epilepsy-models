@@ -8,6 +8,7 @@ class AnalysisFunc:
     2. trans_state_time(df,dt) to calculate number of transitions, it's time and sync time for agiven simulation
     3. compute_params(df,dt) to calculate above parameters for n iterations
     4. get_time(df,dt) to get time units for X axis ticks to plot global order
+    5. compute_toe(nc,main_cluster) to get time of entry of nodes
 
     """
 
@@ -192,3 +193,36 @@ class AnalysisFunc:
         time_steps_na = list(range(0, df_smooth.shape[0]))
         time = np.multiply(time_steps_na, dt)
         return time
+    
+    def compute_main_cluster(self,df):
+        nc=np.array(df)
+        count=np.unique(nc,return_counts=True)[1]
+        main_cluster=np.argsort(count)[::-1][1]
+        return main_cluster
+
+
+
+
+    def compute_toe(self,nc, main_cluster):
+        """Compute time of entry of each node (1st time when node enters the main cluster) for a given node_community nd array. 
+        Puts 4999 for nodes which never enters main cluster
+
+        Args:
+            nc (dataframe): node communities data (timesteps x number of nodes)
+            main_cluster (float): main sync cluster
+
+        Returns:
+            list: time of entry (number of node x 1)
+        """ 
+        nc=np.array(nc)  
+        toe=[]
+        d=0
+        while d < nc.shape[1]:
+            toe_indices=np.where(nc[:,d]==main_cluster)[0]
+            if len(toe_indices) > 0:
+                toe.append(toe_indices[0])
+                d+=1
+            else:
+                toe.append(4999)
+                d+=1
+        return toe
