@@ -51,7 +51,7 @@ class DataRead:
         More on indexing in notebook 'Node Community Extraction.ipynb'
 
         Args:
-            df (dataframe): MultiIndex dataframe of local order data with 'level 0' index as iteration number.
+            df (dataframe): MultiIndex dataframe of local order data (multiple frames of 426 x 5000) with 'level 0' index as iteration number.
             th (float): Local Synchrony Order threshold
             filename (string): Name of file to store node community data
         """
