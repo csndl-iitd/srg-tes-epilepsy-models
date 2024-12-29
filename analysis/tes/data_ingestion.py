@@ -66,10 +66,11 @@ class DataRead:
         # df_nc to store node communities data
         df_nc = pd.DataFrame()
         tr_count = 0
-        count = 0
+        
         # put range of indices for how many transitions you need to do scta
         for x in itr_val:
             df_dum = df.loc[x].T
+            count = 0
             if df_dum.shape[1] / 426 == 1:
                 tr_count += 1
                 local_order = df_dum.values
