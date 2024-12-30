@@ -172,7 +172,7 @@ class AnalysisFunc:
         # print(num)
         print(f"Number of transitions / 100 iteration {tran_per}")
         print(f"Number of transition {itr_tran}")
-        print(f"Number of transition with more than one transition {itr_st}")
+        print(f"Number of transition with more than one transition or a fall back {itr_st}")
         keys = ["tran_per", "trans", "sync"]
         values = [tran_per, trans, sync]
         param_dict = dict(zip(keys, values))
