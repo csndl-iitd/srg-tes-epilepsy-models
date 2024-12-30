@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 class AnalysisFunc:
@@ -195,6 +196,15 @@ class AnalysisFunc:
         return time
     
     def compute_main_cluster(self,df):
+        """Computes main cluster number for given input of node community dataframe for
+        a given transition. 
+          
+        Args:
+            df (dataframe): Node Community dataframe (5000 x 426)
+
+        Returns:
+            integer: main_cluster_number
+        """    
         nc=np.array(df)
         count=np.unique(nc,return_counts=True)[1]
         main_cluster=np.argsort(count)[::-1][1]
@@ -226,3 +236,13 @@ class AnalysisFunc:
                 toe.append(4999)
                 d+=1
         return toe
+    
+    def plot_global_synchrony(self,df,n):
+        df_smooth = self.smooth(df[n])
+        l = self.trans_state_time(df_smooth, 0.05)
+        plt.plot(l["low_cros"], [0.1] * len(l["low_cros"]), "ro")
+        plt.plot(l["up_cros"], [0.4] * len(l["up_cros"]), "go")
+        time = self.get_time(df[n], 0.05)
+        plt.plot(time, df_smooth)
+        plt.xlabel('Time Units')
+        plt.ylabel('Global Order')

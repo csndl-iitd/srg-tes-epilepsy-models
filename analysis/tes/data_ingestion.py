@@ -85,7 +85,7 @@ class DataRead:
                 index = [[x] * 5000, list(range(0, 5000))]
                 df_ncdum = df_ncdum.set_index(index)
                 df_nc = pd.concat([df_nc, df_ncdum])
-                print(f"{tr_count} Cluster track complete for transition {x}")
+                print(f"{tr_count} Cluster track complete for transition in iteration {x}")
             else:
 
                 f_limit = 426
@@ -114,7 +114,7 @@ class DataRead:
                     df_ncdum = df_ncdum.set_index(index)
                     df_nc = pd.concat([df_nc, df_ncdum])
 
-                    print(f"{tr_count} Cluster track complete for transition {x}")
+                    print(f"{tr_count} Cluster track complete for transition in iteration {x}")
 
                     count += 1
 
