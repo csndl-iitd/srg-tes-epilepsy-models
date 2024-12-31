@@ -1,5 +1,12 @@
 # Description of notebooks
 
+### In-progress notebooks  
+
+#### 1. Analyse Time of Entry 
+#### 2. Analyse Node Communities
+#### 3. Paralel Order Extraction
+
+
 ### Analysis notebooks
 Notebooks with name starting with 'Analyse' are for analysis purpose only. Listing analysis notebooks here:
 
@@ -24,10 +31,38 @@ Computes all parameters for all networks and do comparision plot
 
 
 
+### Utility Notebooks  
+Use these notebooks to know how to extract necessary data
+
+#### 1. Automate Order Extraction
+- Usage:
+Computes global and local order data (for transition window of size 5000 timesteps). Stores in data folder.  
+1. Extract Global Order Data
+2. Extract Local Order Data
+3. Store in data folder
+4. Gives count of number of transitions
+
+#### 2. Cluster Track
+- Usage:
+Plot cluster formation and extract node communities.  
+1. Run cluster track  
+2. Plot cluster  
+3. Extract node communities
 
 
-# Test
+#### 3. Node Community Extraction
+- Usage:  
+Extract and store node community data for a given set of local order dataframes
+
+
+### Test Notebooks
+Utility notebooks are tested and verified
+#### Test
 Data used for test:  
 1. Global Order   - itr_test.bz2  
 2. Local Order    - loc_test.bz2
 3. Node community - nc_test.bz2
+
+#### 1. Test Automatic Order Extraction
+#### 2. Test Node Community Extraction
+#### 3. Test Parameter Algo
