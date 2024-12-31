@@ -4,7 +4,7 @@
 
 #### 1. Analyse Time of Entry 
 #### 2. Analyse Node Communities
-#### 3. Paralel Order Extraction
+#### 3. Parallel Order Extraction
 
 
 ### Analysis notebooks
