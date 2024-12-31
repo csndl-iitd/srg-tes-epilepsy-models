@@ -237,12 +237,17 @@ class AnalysisFunc:
                 d+=1
         return toe
     
-    def plot_global_synchrony(self,df,n):
-        df_smooth = self.smooth(df[n])
-        l = self.trans_state_time(df_smooth, 0.05)
+    def plot_global_synchrony(self,df,dt):
+        """Plot global order wrt time units
+
+        Args:
+            df (dataframe): global order dataframe (timestep x 1)
+        """    
+        df_smooth = self.smooth(df)
+        l = self.trans_state_time(df_smooth, dt)
         plt.plot(l["low_cros"], [0.1] * len(l["low_cros"]), "ro")
         plt.plot(l["up_cros"], [0.4] * len(l["up_cros"]), "go")
-        time = self.get_time(df[n], 0.05)
+        time = self.get_time(df, dt)
         plt.plot(time, df_smooth)
         plt.xlabel('Time Units')
         plt.ylabel('Global Order')
