@@ -143,7 +143,7 @@ class AnalysisFunc:
             dt (timestep): simulation timestep
 
         Returns:
-            dictionary: keys - ['tran_per','trans','sync']
+            dictionary: keys - ['tran_per','trans','sync','itr_tran','itr_st']
         """
         i = 0
         num = 0
@@ -175,8 +175,8 @@ class AnalysisFunc:
         print(f"Number of transitions / 100 iteration {tran_per}")
         print(f"Number of transition {itr_tran}")
         print(f"Number of transition with more than one transition or a fall back {itr_st}")
-        keys = ["tran_per", "trans", "sync"]
-        values = [tran_per, trans, sync]
+        keys = ["tran_per", "trans", "sync","itr_tran","itr_st"]
+        values = [tran_per, trans, sync, itr_tran, itr_st]
         param_dict = dict(zip(keys, values))
         return param_dict
 
@@ -245,19 +245,19 @@ class AnalysisFunc:
             df (dataframe): global order dataframe (timestep x 1)
         """    
         df_smooth = self.smooth(df)
-        # l = self.trans_state_time(df_smooth, dt)
-        # plt.plot(l["low_cros"], [0.1] * len(l["low_cros"]), "ro")
-        # plt.plot(l["up_cros"], [0.4] * len(l["up_cros"]), "go")
-        # time = self.get_time(df, dt)
-        # plt.figure(num=1)
-        # plt.plot(time, df_smooth)
-        # # plt.xlabel('Time Units')
-        # plt.ylabel('Global Order')
-        plt.figure(num=2)
-        timestep=list(range(0,df_smooth.shape[0]))
-        plt.plot(timestep, df_smooth)
-        plt.xlabel("Time steps")
-        plt.ylabel("Global Order")
+        l = self.trans_state_time(df_smooth, dt)
+        plt.plot(l["low_cros"], [0.1] * len(l["low_cros"]), "ro")
+        plt.plot(l["up_cros"], [0.4] * len(l["up_cros"]), "go")
+        time = self.get_time(df, dt)
+        plt.figure(num=1)
+        plt.plot(time, df_smooth)
+        # plt.xlabel('Time Units')
+        plt.ylabel('Global Order')
+        # plt.figure(num=2)
+        # timestep=list(range(0,df_smooth.shape[0]))
+        # plt.plot(timestep, df_smooth)
+        # plt.xlabel("Time steps")
+        # plt.ylabel("Global Order")
 
     def node_count(self,df):
         """Calculates the number of nodes and node list entering the main cluster and their timesteps.
