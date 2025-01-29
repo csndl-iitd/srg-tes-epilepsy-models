@@ -253,6 +253,8 @@ class AnalysisFunc:
         plt.plot(time, df_smooth)
         # plt.xlabel('Time Units')
         plt.ylabel('Global Order')
+        plt.xlabel('Time units')
+        plt.title('Simulation for full network')
         # plt.figure(num=2)
         # timestep=list(range(0,df_smooth.shape[0]))
         # plt.plot(timestep, df_smooth)
