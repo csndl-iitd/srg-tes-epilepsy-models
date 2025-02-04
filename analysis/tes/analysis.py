@@ -311,3 +311,26 @@ class AnalysisFunc:
         nc_dict = dict(zip(keys,values))
         return nc_dict
 
+    def compute_time_spent_mc(self,df):
+        """ Computes time spent in main cluster for each node
+    
+        Args:
+                df (dataframe): dataframe of node community data (5000 x 426)
+        
+        Returns:
+                integer: ts_nodes
+        
+        """
+        # compute main cluster
+        main_cluster= self.compute_main_cluster(df)
+        
+        nc=np.array(df)  
+        ts_nodes=[]
+        d=0
+        while d < nc.shape[1]:
+            ts_indices=np.where(nc[:,d]==main_cluster)
+            ts_nodes.append(ts_indices[0].shape[0])
+            d+=1
+    
+        return ts_nodes
+
