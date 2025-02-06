@@ -11,6 +11,8 @@ class AnalysisFunc:
     4. get_time(df,dt) to get time units for X axis ticks to plot global order
     5. compute_toe(nc,main_cluster) to get time of entry of nodes
     6. plot_global_synchrony(df,dt) to plot global order wrt time
+    7. node_count(df) to get node list, node count for nodes entering main cluster
+    8. compute_time_spent_mc(df) to compute time spent of each node in main cluster
 
     """
 
@@ -318,7 +320,7 @@ class AnalysisFunc:
                 df (dataframe): dataframe of node community data (5000 x 426)
         
         Returns:
-                integer: ts_nodes
+                ts_nodes (list): list of time spent by each node (426,)
         
         """
         # compute main cluster
