@@ -15,7 +15,7 @@ class DataRead:
     3. data_read_csv(filename): To read .csv file
     4. ext_node_community(df,th,filename): To extract node community for given local order data
     5. ext_global_order(itr_c,itr_filename,loc_filename): To extract global and local order automatically
-    6. get_communities(): To get communnity map as pandas series
+    6. get_communities(): To get desired order, node count per community and community name 
 
     """
 
@@ -247,7 +247,8 @@ class DataRead:
          0:'MO', 1:'MID', 2:'VIS', 3:'ORB', 4:'HTh', 5:'HIND', 6:'OLF', 7:'HIPP'
 
         Returns:
-            Series: Pandas Series index as node number and community as value
+            dictionary: Keys are ['des_order','comm_val','name_seq']. des_order gives node sequence and comm_val gives  count of
+            nodes in each community. 
         """
         l_communities = self.data_read_pkl(
             "connectivity_matrix/mb_communities_dict.pickle"
@@ -266,4 +267,11 @@ class DataRead:
         community_map = pd.concat(
             [pd.Series(data=k, index=v) for k, v in communities.items()]
         )
-        return community_map
+        name_seq=community_map.unique()
+        comm_val=community_map.value_counts()
+        comm_val=comm_val[name_seq]
+        des_order=list(community_map.index)
+        keys=['des_order','comm_val','name_seq']
+        values=[des_order,comm_val,name_seq]
+        comm_dict=dict(zip(keys,values))
+        return comm_dict
