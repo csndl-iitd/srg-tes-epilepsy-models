@@ -13,6 +13,7 @@ class AnalysisFunc:
     6. plot_global_synchrony(df,dt) to plot global order wrt time
     7. node_count(df) to get node list, node count for nodes entering main cluster
     8. compute_time_spent_mc(df) to compute time spent of each node in main cluster
+    9. compute_time_spent(df,sim_time) to compute time spent in sync state for transitions that falls back and also do not fall back
 
     """
 
@@ -336,3 +337,76 @@ class AnalysisFunc:
     
         return ts_nodes
 
+    def compute_time_spent(self,df,sim_time):
+        """This takes input as the global order dataframe and computes time spent in sync state for evry iteration which has transition.
+    
+            Args:
+                df (dataframe): global synchrony order (timesteps * number of iterations)
+                sim_time (integer): Total time of simulation for an iteration in time units (eg. 40000 timestep with 0.02 timestep is 2000 time units)
+    
+            Returns:
+                dictionary: Returns sync_dict with keys ['counts','time','time_spent']
+        """
+        # call compute param to know which iterations have single transitions and which fell back or had multiple transitions
+        
+        # to store the sync time for every iteration 
+        sync_time=[]
+        
+        # call compute_param to get lists of iterations having transitions
+        param=self.compute_param(df,0.05)
+        
+        # lst1 store iteration numbers which had transitions (single and multiple both)
+        lst1=param['itr_tran']
+        # lst2 stores iteration numbers which have fall back or multiple transitions 
+        lst2=param['itr_st']
+        
+        # finding only those iterations which have only single transitions
+        
+        itr_list=set(lst1)-set(lst2)
+        # print(f'itr_list is {itr_list}')
+        
+        # iterating over itr_list iterations to find out time spent in sync state
+        for i in itr_list:
+            df_smooth=self.smooth(df[i])
+            pm=self.trans_state_time(df_smooth,0.05)
+            st=sim_time-pm['low_cros'][0]
+            sync_time.append(st)
+        
+        #print(sync_time)
+        #print(len(sync_time))
+        #print(len(itr_list))
+        #print(param['sync'])
+        
+        # merging both time spent for single transition and multiple/fallback transition iterations
+        time_spent=sync_time+param['sync']
+        time_spent.sort()
+        
+        #print(time_spent)
+        # print(len(time_spent))
+        #print('The number of iterations with transitions',len(param['itr_tran']))
+    
+    
+        # make time comparision list
+    
+        time = list(range(50,sim_time,50))
+        # make list of zeros to increment accordingly
+        
+        counts = [0]*len(time)
+        
+        # comparing with time spent llist
+        
+        for sync in time_spent:
+            for i, t in enumerate(time):
+                ind = 0
+                if sync < t:
+                    while ind<i:
+                        counts[ind]+=1
+                        ind+=1
+                    break
+        
+        #print(counts)
+    
+        keys=['counts','time','time_spent']
+        values=[counts,time,time_spent]
+        sync_dict = dict(zip(keys,values))
+        return sync_dict
