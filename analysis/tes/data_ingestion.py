@@ -271,7 +271,7 @@ class DataRead:
         comm_val=community_map.value_counts()
         comm_val=comm_val[name_seq]
         des_order=list(community_map.index)
-        keys=['des_order','comm_val','name_seq']
-        values=[des_order,comm_val,name_seq]
+        keys=['des_order','comm_val','name_seq','comm_map']
+        values=[des_order,comm_val,name_seq,community_map]
         comm_dict=dict(zip(keys,values))
         return comm_dict

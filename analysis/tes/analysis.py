@@ -1,7 +1,8 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-
+import networkx as nx
+import seaborn as sns
 
 class AnalysisFunc:
     """This class contains functions to use for analysis.
@@ -14,6 +15,7 @@ class AnalysisFunc:
     7. node_count(df) to get node list, node count for nodes entering main cluster
     8. compute_time_spent_mc(df) to compute time spent of each node in main cluster
     9. compute_time_spent(df,sim_time) to compute time spent in sync state for transitions that falls back and also do not fall back
+    10. node_color(color_nodes,n_color,G,df_nc) to color nodes on plot between 'time spent in main cluster' and 'degree'
 
     """
 
@@ -410,3 +412,61 @@ class AnalysisFunc:
         values=[counts,time,time_spent]
         sync_dict = dict(zip(keys,values))
         return sync_dict
+
+
+    def node_color(self,color_nodes,n_color,G,df_nc):
+        """ Plots the given nodes with desired color on the plot of 'time spent in main cluster' vs 'degree'. Input the node community data which you  are using to find color_nodes.
+
+        Args:
+            color_nodes (list): List of nodes which you want to color
+            n_color (character) : color of nodes you want
+            G (numpy array) : network graph
+            df_nc(dataframe): the node community data you used to evaluate time spent and color_nodes
+
+        Returns:
+            None
+        
+        """
+        df_r=df_nc.reset_index(drop=True)
+        i=0
+        f=5000
+        time_list=[]
+        node_list=[]
+        while f < df_r.shape[0]:
+            l=self.compute_time_spent_mc(df_r.iloc[i:f,:])
+            node_list.append(l)
+            i=f
+            f+=5000
+        
+        df_time_spent = pd.DataFrame(node_list)
+        MTS = df_time_spent.median()
+        med_time_spent = list(MTS)
+        keys=list(range(0,426))
+        mts_dict=dict(zip(keys,med_time_spent))
+        mts_sorted =dict(sorted(mts_dict.items(), key=lambda item: item[1]))
+
+        
+        degree = nx.degree_centrality(G)
+        degree_val =list(degree.values())
+
+        
+        plt.figure(figsize=(10, 6))
+        ax=sns.scatterplot(x=degree_val, y=med_time_spent, s=100, alpha=0.6, edgecolor='w')
+        
+        for i, txt in enumerate(keys):
+            ax.annotate(txt, (degree_val[i], med_time_spent[i]), fontsize=8)
+        tdeg=[]
+        tmts=[]
+        for i in color_nodes:
+            tdeg.append(degree_val[i])
+            tmts.append(med_time_spent[i])
+        
+        ax=sns.scatterplot(x=tdeg,y=tmts,s=100,alpha=0.6,color=n_color)
+
+        # for i, txt in enumerate(keys):
+        #     ax.annotate(txt, (tdeg[i], tmts[i]), fontsize=8)
+
+        plt.xlabel('Degree')
+        plt.ylabel('Median time spent (a.u.)')
+        plt.title('Scatter plot of Median Time Spent vs Degree')
+        
