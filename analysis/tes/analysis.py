@@ -414,7 +414,7 @@ class AnalysisFunc:
         return sync_dict
 
 
-    def node_color(self,color_nodes,n_color,G,df_nc):
+    def node_color(self,color_nodes,n_color,G,df_nc,centrality):
         """ Plots the given nodes with desired color on the plot of 'time spent in main cluster' vs 'degree'. Input the node community data which you  are using to find color_nodes.
 
         Args:
@@ -461,7 +461,7 @@ class AnalysisFunc:
             tdeg.append(degree_val[i])
             tmts.append(med_time_spent[i])
         
-        ax=sns.scatterplot(x=tdeg,y=tmts,s=100,alpha=0.6,color=n_color)
+        ax=sns.scatterplot(x=tdeg,y=tmts,hue=centrality,s=100,alpha=0.6,color=n_color)
 
         # for i, txt in enumerate(keys):
         #     ax.annotate(txt, (tdeg[i], tmts[i]), fontsize=8)
