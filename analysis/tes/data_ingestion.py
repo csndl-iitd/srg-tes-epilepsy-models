@@ -8,7 +8,7 @@ import pickle
 
 
 class DataRead:
-    """This class contains functions to read data from files.
+    """This class contains functions to read data from files. The folder it is set to is '../../data'
     1. data_read_bz2(filename): To read .bz2 file
     2. data_read_pkl(filename): To read .pkl file
     3. data_dump_pkl(filename,data): To dump .pkl file

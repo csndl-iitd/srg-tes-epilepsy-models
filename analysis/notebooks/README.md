@@ -10,7 +10,7 @@
 ### Analysis notebooks
 Notebooks with name starting with 'Analyse' are for analysis purpose only. Listing analysis notebooks here:
 
-#### 1. Analyse Global Order  
+#### 1. Analyse Global Order (Done)
 - Data used: 'itr_test.bz2'  
 
 - Usage:  
@@ -21,15 +21,30 @@ All computation done for iteration number 5 in above data (one can change iterat
 4. Calculate number of transitions
 5. Plot global order vs time with crossing marked
 
-#### 2. Analyse Parameter
-- Data used: Server data
+#### 2. Analyse Parameter (Done)
+- Data used: processed (data with 1000 iterations)
 - Usage: 
-Computes all parameters for all networks and do comparision plot
 1. Compute transition time, sync time and number of transitions/100 iterations  
 2. Plot transition time, sync time and number of transitions/100 iterations  
 3. Store above parameters as pickle file
+4. Note for sync state time
+
+#### 3. Analyse Time of Entry (Done)
+-Data used: Node communities data from raw for all networks
+- Usage:
+1. Compute time of entry and plot the comparision among various networks
+2. Compute Time of Entry of nodes based on first time they enter the main cluster
+3. You can compute median TOE or avg TOE
+4. Arrange nodes by their communities and plot them
+5. Use Avinash color scheme for communities as well as different colors for plots
+
+#### 4. Analyse Control Nodes (in Progress)
+1. Compute and plot parameters for control nodes and random nodes
 
 
+#### 5. Analyse Centrality  
+- Usage: Compute network measures for Brain Network
+1. 
 
 ### Utility Notebooks  
 Use these notebooks to know how to extract necessary data

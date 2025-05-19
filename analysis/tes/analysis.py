@@ -15,8 +15,9 @@ class AnalysisFunc:
     7. node_count(df) to get node list, node count for nodes entering main cluster
     8. compute_time_spent_mc(df) to compute time spent of each node in main cluster
     9. compute_time_spent(df,sim_time) to compute time spent in sync state for transitions that falls back and also do not fall back
-    10. node_color(color_nodes,n_color,G,df_nc) to color nodes on plot between 'time spent in main cluster' and 'degree'
-
+    10. plot_node_color(color_nodes,n_color,G,df_nc) to color nodes on plot between 'time spent in main cluster' and 'degree'
+    11. avg_toe(df) to compute median/average time spent of particular node in main cluster
+    
     """
 
     def smooth(self, df):
@@ -413,8 +414,8 @@ class AnalysisFunc:
         sync_dict = dict(zip(keys,values))
         return sync_dict
 
-
-    def node_color(self,color_nodes,n_color,G,df_nc,centrality):
+    
+    def plot_node_color(self,color_nodes,n_color,G,df_nc):
         """ Plots the given nodes with desired color on the plot of 'time spent in main cluster' vs 'degree'. Input the node community data which you  are using to find color_nodes.
 
         Args:
@@ -461,7 +462,7 @@ class AnalysisFunc:
             tdeg.append(degree_val[i])
             tmts.append(med_time_spent[i])
         
-        ax=sns.scatterplot(x=tdeg,y=tmts,hue=centrality,s=100,alpha=0.6,color=n_color)
+        ax=sns.scatterplot(x=tdeg,y=tmts,s=100,alpha=0.6,color=n_color)
 
         # for i, txt in enumerate(keys):
         #     ax.annotate(txt, (tdeg[i], tmts[i]), fontsize=8)
@@ -469,4 +470,26 @@ class AnalysisFunc:
         plt.xlabel('Degree')
         plt.ylabel('Median time spent (a.u.)')
         plt.title('Scatter plot of Median Time Spent vs Degree')
+
+
+    def avg_toe(self,df): 
+        """Compute median/avg time of entry for a certain number of transitions  
+            Args: 
+            df (dataframe): Takes node community data for certain number of transitions with index reset (for each transition, there are 5000 rows)
+    
+            Returns: 
+            float: median TOE considering all transitions (can change to average - use np.mean )
+        """
+        i=0
+        f=5000
+        toe=[]
+        while f < df.shape[0]:
+            mc=self.compute_main_cluster(df.iloc[i:f,:])
+            t=self.compute_toe(df.iloc[i:f,:],mc)
+            toe.append(t)
+            i=f
+            f+=5000
+        # can use mean or median accordingly
+        col_mean = np.median(np.array(toe),axis=0)
+        return col_mean
         
