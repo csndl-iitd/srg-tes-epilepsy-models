@@ -64,10 +64,10 @@ class MBN_RC(tES_Adaptive, DataUtils):
         self.A = np.mat(nx.adjacency_matrix(self.G).todense())
         np.fill_diagonal(self.A, 0)
 
-        self.A[:,62]=0
-        self.A[:,275]=0
-        self.A[62,:]=0
-        self.A[275,:]=0
+        self.A[:,0]=0
+        self.A[:,213]=0
+        self.A[0,:]=0
+        self.A[213,:]=0
         
         #print("Average shortest path length: ", nx.average_shortest_path_length(self.G))
         #print("Avg clustering coefficient: ", nx.average_clustering(self.G))
