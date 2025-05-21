@@ -39,15 +39,37 @@ All computation done for iteration number 5 in above data (one can change iterat
 5. Use Avinash color scheme for communities as well as different colors for plots
 
 #### 4. Analyse Control Nodes (in Progress)
+- Data used: Control nodes in 'raw/check_control' and random nodes in 'raw/random_nodes'
 1. Compute and plot parameters for control nodes and random nodes
+2. Plot TOE for control and random nodes
 
-
-#### 5. Analyse Centrality  
+#### 5. Analyse Centrality (in Progress)
 - Usage: Compute network measures for Brain Network
-1. 
+- Data used: Betweenness centrality data in folder 'raw/random' and connector hubs from 'raw/check_connector'
+1. 1. Betweenness Centrality descending order data plot over number of transitions
+2. Articulation point: No point
+3. Centrality measures: 1. Betweenness Centrality 2. Eigen Vector Centrality 3. Degree Centrality 4. Nodal Efficiency
+4. Time of Entry
+5. Nodes on MTS vs Degree plot with color varying with centrality measures and size according to number of transitions (Lower the number of transitions larger the node size)  
+
+
+#### 6. Analyse Sync State Time (in progress)
+
+
+
+#### 7. Analyse Node Communities (in progress)
+
+
+#### 8. Analyse Summary (in progress)
+
+
+#### 9. Scratch (in progress)
+
 
 ### Utility Notebooks  
 Use these notebooks to know how to extract necessary data
+Use 'GO_extraction' to extract global order data  
+Use 'NC_extraction' to extract node community data
 
 #### 1. Automate Order Extraction
 - Usage:
