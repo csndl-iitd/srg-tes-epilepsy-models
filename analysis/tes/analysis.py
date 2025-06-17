@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
 import seaborn as sns
+import statistics
 
 class AnalysisFunc:
     """This class contains functions to use for analysis.
@@ -17,6 +18,7 @@ class AnalysisFunc:
     9. compute_time_spent(df,sim_time) to compute time spent in sync state for transitions that falls back and also do not fall back
     10. plot_node_color(color_nodes,n_color,G,df_nc) to color nodes on plot between 'time spent in main cluster' and 'degree'
     11. avg_toe(df) to compute median/average time spent of particular node in main cluster
+    12. compute_coverage(df_itr,df_nc) to calculate coverage for a set of iterations
     
     """
 
@@ -492,4 +494,30 @@ class AnalysisFunc:
         # can use mean or median accordingly
         col_mean = np.median(np.array(toe),axis=0)
         return col_mean
+
+    def compute_coverage(self,df_itr,df_nc): 
+        param=self.compute_param(df_itr,0.05)
+            
+        # lst1 store iteration numbers which had transitions (single and multiple both)
+        lst1=param['itr_tran']
+        # lst2 stores iteration numbers which have fall back or multiple transitions 
+        lst2=param['itr_st']
+        # finding only those iterations which have only single transitions
+        itr_list=set(lst1)-set(lst2)
+        itr_list=list(itr_list)
+    
+        node_count_list=[]
+        for i in itr_list:
+            l=self.node_count(df_nc.loc[i])
+            node_count_list.append(l['node_count'])
+    
+        nc_df=pd.DataFrame(node_count_list).T
+    
+        n=0
+        mean_count=[]
+        while n<len(itr_list):
+            mean_count.append(nc_df[n][800:1000].median().round())
+            n+=1
         
+        coverage=statistics.median(mean_count).round()
+        return coverage
