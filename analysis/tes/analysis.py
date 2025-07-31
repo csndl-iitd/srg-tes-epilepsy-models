@@ -257,7 +257,7 @@ class AnalysisFunc:
         plt.plot(l["low_cros"], [0.1] * len(l["low_cros"]), "ro")
         plt.plot(l["up_cros"], [0.4] * len(l["up_cros"]), "go")
         time = self.get_time(df, dt)
-        plt.figure(num=1)
+        plt.figure(num=1,figsize=(8,3))
         plt.plot(time, df_smooth)
         # plt.xlabel('Time Units')
         plt.ylabel('Global Order')
