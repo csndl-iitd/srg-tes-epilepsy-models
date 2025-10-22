@@ -168,3 +168,6 @@ env_tes/
 *.pkl
 *.npz
 *.npy
+data
+
+*.egg-info
