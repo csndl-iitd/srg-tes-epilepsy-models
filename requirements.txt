@@ -9,3 +9,6 @@ scipy==1.10.0
 seaborn
 black
 black[jupyter]
+ipykernel
+umap-learn
+

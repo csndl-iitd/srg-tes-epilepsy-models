@@ -134,7 +134,7 @@ class UmapAlgo:
         _data = df.rolling(800, center=True).mean().ffill().bfill()
         fig, ax = plt.subplots(figsize=(12, 3))
         cmap = "jet"
-        with open("umap_model.pkl", "rb") as f:
+        with open("../../data/umap_model.pkl", "rb") as f:
             _s, _u = pickle.load(f)
         chunk_size = 400
         # When you increase or decrease your chunk size, you alter the persistence i.e for how long it stays in sync state

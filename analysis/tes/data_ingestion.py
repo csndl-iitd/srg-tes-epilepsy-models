@@ -4,6 +4,7 @@ import numpy as np
 from tes.analysis import AnalysisFunc
 from tes.ClusterTracking import SCTA
 from tes.MBN_Res_Constrn import MBN_RC
+from tes.algo_umap import UmapAlgo
 import pickle
 
 
@@ -16,6 +17,7 @@ class DataRead:
     4. ext_node_community(df,th,filename): To extract node community for given local order data
     5. ext_global_order(itr_c,itr_filename,loc_filename): To extract global and local order automatically
     6. get_communities(): To get desired order, node count per community and community name 
+    7. new_algo_ext(): To get global order, local order using new algo
 
     """
 
@@ -275,3 +277,59 @@ class DataRead:
         values=[des_order,comm_val,name_seq,community_map]
         comm_dict=dict(zip(keys,values))
         return comm_dict
+
+    def new_algo_ext(self, itr_c, itr_filename):
+        """
+        Stores Global Order Data and Local Order Data for given number of simulations in data folder.
+
+        Args:
+            itr_c (integer): Input count of simulations
+            itr_filename (string): filename (.bz2) to store global order data
+            loc_filename (string): filename (.bz2) to store local order data
+        """
+        # object to use new algo to find out start stop points
+        algo = UmapAlgo()
+        # put itr as number of iterations you want
+        itr = itr_c
+        # to get and store iterations data
+        c = 0
+
+        # to store iteration data
+        df_itr = pd.DataFrame()
+
+        #to store local order data
+        #df_loc_data = pd.DataFrame()
+
+        while c < itr:
+            print("Current iteration is", c)
+            mbn = MBN_RC(
+                nepochs=40000,
+                dt=0.05,
+                lambda_o=2.86,
+                alpha=0.01,
+                beta=0.002,
+                plot_bifurcation=False,
+            )
+
+            mbn.run_model()
+
+            # df to store 1 iteration data
+            df = pd.DataFrame(mbn.GLOBAL_ORDER_VERBOSE)
+            # concatenating each iteration as a column
+            df_itr = pd.concat([df_itr, df], axis=1)
+
+            # changing headers to number of iterations
+            df_itr.columns = range(0, df_itr.shape[1])
+            # storing dataframe in csv file
+            itr_path = self.main_data_dir / itr_filename
+            df_itr.to_pickle(itr_path, compression="bz2")
+
+            # getting start points using Umap Algo
+            trans_points = algo.compute_parameters(df_itr[c])
+            start=trans_points['start_points']
+            #print(f'start points:{start}')
+
+            for time_point in start:
+                
+            c+=1
+        print('done')
