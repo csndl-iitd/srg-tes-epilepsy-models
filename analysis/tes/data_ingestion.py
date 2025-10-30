@@ -278,7 +278,7 @@ class DataRead:
         comm_dict=dict(zip(keys,values))
         return comm_dict
 
-    def new_algo_ext(self, itr_c, itr_filename):
+    def new_algo_ext(self, itr_c, itr_filename, loc_filename):
         """
         Stores Global Order Data and Local Order Data for given number of simulations in data folder.
 
@@ -298,7 +298,7 @@ class DataRead:
         df_itr = pd.DataFrame()
 
         #to store local order data
-        #df_loc_data = pd.DataFrame()
+        df_loc_data = pd.DataFrame()
 
         while c < itr:
             print("Current iteration is", c)
@@ -327,9 +327,32 @@ class DataRead:
             # getting start points using Umap Algo
             trans_points = algo.compute_parameters(df_itr[c])
             start=trans_points['start_points']
-            #print(f'start points:{start}')
+            print(f'start points:{start}')
 
-            for time_point in start:
+            # making lower and upper points for local order 
+            if start:
+                for time_point in start:
+
+                    lt_loc = time_point -3000
+                    ut_loc = time_point + 2000
+                    # extracting data from df_loc
+                    header_list = list(range(lt_loc, ut_loc))
+                    # filtering those columns which lie in between 0 to mbn.nepochs
+                    header_list_f = [x for x in header_list if 0 <= x < mbn.nepochs]
+                    df_dum = mbn.df_loc[header_list_f]
+                    # changing column numbers so that they be concated 1 below other
+                    df_dum.columns = range(0, df_dum.shape[1])
+
+                    # creating multi-index dataframe
+                    index = [[c] * 426, list(range(0, 426))]
+                    df_dum = df_dum.set_index(index)
+                    df_loc_data = pd.concat([df_loc_data, df_dum])
+
+            
+
                 
             c+=1
+        loc_path = self.main_data_dir / loc_filename
+        df_loc_data = df_loc_data.astype(np.float32)
+        df_loc_data.to_pickle(loc_path, compression="bz2")
         print('done')
