@@ -327,7 +327,7 @@ class DataRead:
             # getting start points using Umap Algo
             trans_points = algo.compute_parameters(df_itr[c])
             start=trans_points['start_points']
-            print(f'start points:{start}')
+            #print(f'start points:{start}')
 
             # making lower and upper points for local order 
             if start:
@@ -346,11 +346,8 @@ class DataRead:
                     # creating multi-index dataframe
                     index = [[c] * 426, list(range(0, 426))]
                     df_dum = df_dum.set_index(index)
-                    df_loc_data = pd.concat([df_loc_data, df_dum])
-
-            
-
-                
+                    df_loc_data = pd.concat([df_loc_data, df_dum])   
+                                 
             c+=1
         loc_path = self.main_data_dir / loc_filename
         df_loc_data = df_loc_data.astype(np.float32)

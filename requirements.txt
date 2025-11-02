@@ -11,4 +11,3 @@ black
 black[jupyter]
 ipykernel
 umap-learn
-
