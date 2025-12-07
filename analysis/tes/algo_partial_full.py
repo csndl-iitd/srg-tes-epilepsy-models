@@ -190,9 +190,9 @@ class AlgoParFull:
         Returns:
             Dictionary: 3 dictionaries"""
         algo = UmapAlgo()
-        # thres = self.compute_threshold(df)
+        thres = self.compute_threshold(df)
 
-        thres=0.39874500541287045  #fn
+        #thres=0.39874500541287045  #fn
         # thres = 0.37842782078338566 #peri
 
         n = 0
