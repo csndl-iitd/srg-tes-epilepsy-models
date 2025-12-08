@@ -213,7 +213,7 @@ class UmapAlgo:
             )
             for i in rolling_slopes.index:
                 if rolling_slopes[i] < 0:
-                    print(i)
+                    #print(i)
                     c = i - 1
                     t_time.append(c)
                     break
