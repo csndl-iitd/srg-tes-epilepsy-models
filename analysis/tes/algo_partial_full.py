@@ -6,6 +6,7 @@ import seaborn as sns
 import statistics
 import pickle
 from tes.algo_umap import UmapAlgo
+
 from scipy.stats import gaussian_kde
 
 
@@ -15,10 +16,11 @@ class AlgoParFull:
     1. compute_coverage(df): Computes coverage of all visible transitions in an iteration and returns list containing coverage of each transition.
     2. compute_threshold(df): Compute threshold by plotting histogram and finding minima after smoothing it.
     """
-
+    
     def compute_coverage(self, df, start, stop):
-        """Computes coverage for each transition in a given iteration.
-
+        """ [OUTDATED]Computes coverage for each transition in a given iteration.
+            This uses global order data. New function 'compute_coverage_nc()' is already 
+            defined in commAnalysis
         Args:
             df (dataframe): dataframe column of 1 x timestep entries
             start (list): From compute_parameters(df) in UmapAlgo
@@ -50,9 +52,11 @@ class AlgoParFull:
                 i += 1
 
         return cov_int
+    
+    
 
     def compute_threshold(self, df):
-        """Computes threshold coverage to classify whether a transition is partial or full
+        """ [OUTDATED] Computes threshold coverage to classify whether a transition is partial or full
 
         Args:
             df (dataframe): Whole dataset timesteps x total number of iterations
@@ -90,7 +94,11 @@ class AlgoParFull:
 
         # print("Estimated minima at:", minima_x)
         return minima_x[0]
+    
 
+
+    
+    
     def compute_fpt(self, start, stop):
         """Computes average FPT for a particular iteration considering all transitions
         Args:
@@ -130,6 +138,7 @@ class AlgoParFull:
 
     def compute_sync(self, start, stop):
         """Computes sync time for all the transitions in a given iteration (not considering the transition which never falls back).
+            Make sure you remove all zero entries from the returned list.
         Args:
             start (list): From compute_parameters(df)
             stop (list): From compute_parameters(df)
