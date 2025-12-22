@@ -8,7 +8,7 @@ import pickle
 from tes.algo_umap import UmapAlgo
 
 from scipy.stats import gaussian_kde
-
+algoumap = UmapAlgo()
 
 class AlgoParFull:
     """This class contains functions to use for analysis and calculate various parameters for partial and full transitions separately.
@@ -95,7 +95,7 @@ class AlgoParFull:
         # print("Estimated minima at:", minima_x)
         return minima_x[0]
     
-
+    
 
     
     
@@ -192,18 +192,32 @@ class AlgoParFull:
             "count_trans": len(part_ind) + len(full_ind),
         }
 
-    def compute_param_df(self, df):
+    def compute_param_df(self, df,df_nc,network):
         """Computes every parameter for a dataset of particular NOI
         Args:
             df (dataframe): timesteps x number of iterations
+            network (string): Make sure you already have threshold data stored
         Returns:
             Dictionary: 3 dictionaries"""
         algo = UmapAlgo()
-        thres = self.compute_threshold(df)
+        # thres = self.compute_threshold(df)
+        from tes.data_ingestion import DataRead
+        reader=DataRead()
+        thres_data= reader.data_read_pkl('results/coverage_threshold.pkl')
+        try:
+            if network not in thres_data.keys():
+                raise ValueError("Network not in saved threshold list")
+            else:
+                thres = thres_data[network]
+                print(thres)
+        except ValueError as e:
+                print("Error:",e)
+
 
         #thres=0.39874500541287045  #fn
         # thres = 0.37842782078338566 #peri
-
+        
+        
         n = 0
         # to count partial transition
         tot_par_count = 0
