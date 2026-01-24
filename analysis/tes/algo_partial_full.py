@@ -192,7 +192,7 @@ class AlgoParFull:
             "count_trans": len(part_ind) + len(full_ind),
         }
 
-    def compute_param_df(self, df,df_nc,network):
+    def compute_param_df(self, df,network):
         """Computes every parameter for a dataset of particular NOI
         Args:
             df (dataframe): timesteps x number of iterations
