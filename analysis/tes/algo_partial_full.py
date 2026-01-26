@@ -132,6 +132,8 @@ class AlgoParFull:
             # print(fpt_int)
             # fpt=statistics.mean(fpt_int)
         # multiply by dt=0.05
+        # remove zero entries from fpt_int
+        fpt_int=[x for x in fpt_int if x > 0]
         fpt_int = [k * 0.05 for k in fpt_int]
 
         return fpt_int
@@ -164,6 +166,9 @@ class AlgoParFull:
             # print(start)
             for i, j in zip(start, stop):
                 sync_int.append(j - i + 800)
+        
+		# removing zero entries as those means no transition
+        sync_int=[x for x in sync_int if x>0]
 
         return [s_dum * 0.05 for s_dum in sync_int]
 
@@ -260,6 +265,135 @@ class AlgoParFull:
                 )
                 cov = self.compute_coverage(
                     df[n], k["start_points"].copy(), k["stop_points"].copy()
+                )
+                trans_num = self.compute_num_trans(cov, thres)
+                tot_par_count += trans_num["count_part"]
+                tot_full_count += trans_num["count_full"]
+                # print("completed params")
+
+                if len(trans_num["part_ind"]) != 0:
+                    for i in trans_num["part_ind"]:
+                        if i < len(trans_time):
+                            p_trans_time.append(trans_time[i])
+                            if i < len(sync_time):
+                                p_sync_time.append(sync_time[i])
+                            p_fp_time.append(fp_time[i])
+                            p_cov.append(cov[i])
+                        else:
+                            p_fp_time.append(fp_time[i])
+                            p_cov.append(cov[i])
+                    # print("part done")
+
+                if len(trans_num["full_ind"]) != 0:
+                    for i in trans_num["full_ind"]:
+                        if i < len(trans_time):
+                            n_trans_time.append(trans_time[i])
+                            if i < len(sync_time):
+                                n_sync_time.append(sync_time[i])
+                            n_fp_time.append(fp_time[i])
+                            n_cov.append(cov[i])
+                        else:
+                            n_fp_time.append(fp_time[i])
+                            n_cov.append(cov[i])
+                    # print("full done")
+                n += 1
+
+        # create dictionary to store no. of partial and full transition and iteration number which had transition
+        dict_trans = {
+            "n_part": tot_par_count,
+            "n_full": tot_full_count,
+            "n_total": tot_par_count + tot_full_count,
+            "itr_tran": itr,
+        }
+
+        dict_par_params = {
+            "t_t": p_trans_time,
+            "fp_t": p_fp_time,
+            "s_t": p_sync_time,
+            "cov": p_cov,
+        }
+
+        dict_full_params = {
+            "t_t": n_trans_time,
+            "fp_t": n_fp_time,
+            "s_t": n_sync_time,
+            "cov": n_cov,
+        }
+        print("done")
+        return dict_trans, dict_par_params, dict_full_params
+
+    def compute_final_param_df(self, df,df_nc,network):
+        """Computes every parameter for a dataset of particular NOI and computes coverage using node community data
+        Args:
+            df (dataframe): global order data timesteps x number of iterations
+            df_nc (dataframe): node community data for that network
+            network (string): Make sure you already have threshold data stored
+        Returns:
+            Dictionary: 3 dictionaries"""
+        algo = UmapAlgo()
+        # thres = self.compute_threshold(df)
+        from tes.data_ingestion import DataRead
+        reader=DataRead()
+
+        from tes.commAnalysis import CommPercentages
+        cov_compute=CommPercentages()
+        thres_data= reader.data_read_pkl('results/coverage_threshold.pkl')
+        try:
+            if network not in thres_data.keys():
+                raise ValueError("Network not in saved threshold list")
+            else:
+                thres = thres_data[network]
+                print(thres)
+        except ValueError as e:
+                print("Error:",e)
+
+
+        #thres=0.39874500541287045  #fn
+        # thres = 0.37842782078338566 #peri
+        
+        
+        n = 0
+        # to count partial transition
+        tot_par_count = 0
+        # to count full transition
+        tot_full_count = 0
+        # to store which iterations have transitions
+        itr = []
+
+        # to store parameters for partial transition
+        p_trans_time = []
+        p_fp_time = []
+        p_sync_time = []
+        p_cov = []
+
+        # to store parameters for full transitions
+        n_trans_time = []
+        n_fp_time = []
+        n_sync_time = []
+        n_cov = []
+
+        while n < df.shape[1]:
+            print(n)
+            k = algo.compute_parameters(df[n])
+            # print(k)
+            # check if transition or not
+            if not k["start_points"]:
+                # print("in not")
+                n += 1
+                continue
+            else:
+                itr.append(n)
+                trans_time = algo.compute_transition_time(
+                    df[n], k["start_points"].copy()
+                )
+                fp_time = self.compute_fpt(
+                    k["start_points"].copy(), k["stop_points"].copy()
+                )
+                sync_time = self.compute_sync(
+                    k["start_points"].copy(), k["stop_points"].copy()
+                )
+                df_nc_itr = df_nc.loc[n]
+                cov = cov_compute.compute_individual_coverage_nc(df_nc_itr,df[n]
                 )
                 trans_num = self.compute_num_trans(cov, thres)
                 tot_par_count += trans_num["count_part"]

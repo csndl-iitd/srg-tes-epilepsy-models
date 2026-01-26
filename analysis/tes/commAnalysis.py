@@ -456,6 +456,40 @@ class CommPercentages:
         
         return [total_coverage,minima_x[0]]
 
+    def compute_individual_coverage_nc(self,df_nc_itr,df_go_itr):
+        """Compute coverage for a particular iteration.
+
+        Args:
+            df_nc_itr (dataframe): node community dataframe of iteration
+            df_go_itr (dataframe): global order dataframe of iteration (1 x timesteps)
+
+        Returns:
+            float: Coverage of that particular iteration
+        """
+
+        pts = algoumap.compute_parameters(df_go_itr)
+        comm_pts = self.get_crossing_go(df_go_itr,pts)
+        # algoumap.plot_transition(df[itr], pts['start_points'],pts['stop_points'])
+        # iterating over node community data
+        nc_lim=df_nc_itr.shape[0]/5000
+        ind=list(range(0,int(nc_lim)))
+        total_coverage=[]
+        i=0
+        c=5000
+        while i<len(ind):
+            df_dum=df_nc_itr.iloc[i*5000:c]
+            df_bm=self.get_binairized_matrix(df_dum,comm_pts['start_comm'][i])
+            cov_nodes=self.get_community_percentage( comm_pts['start_comm'][i], comm_pts['stop_comm'][i], df_bm)
+            # Counting nodes in main cluster
+            node_mc =cov_nodes[1].values.sum()
+            total_nodes = cov_nodes[1].size
+            coverage = node_mc / total_nodes
+            total_coverage.append(coverage)
+            c+=5000
+            i+=1
+
+        
+        return total_coverage
              
 
         
