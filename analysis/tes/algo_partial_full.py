@@ -16,7 +16,33 @@ class AlgoParFull:
     1. compute_coverage(df): Computes coverage of all visible transitions in an iteration and returns list containing coverage of each transition.
     2. compute_threshold(df): Compute threshold by plotting histogram and finding minima after smoothing it.
     """
-    
+    def compute_num(self,df_go):
+        '''
+        Compute number of transition and and compute iteration numbers which have transitions
+        
+        Args:
+            df_go (Dataframe) : Global Order of dataframe
+        Returns:
+            dict : keys:'count', 'itr'
+        '''
+        # includes both partial and full transitions
+        tran_count=0
+        # list to store itr having transitions
+        itr_tran=[]
+        for itr in df_go.columns:
+            # print(df_go[itr])
+            pts=algoumap.compute_parameters(df_go[itr])
+            if not pts['start_points']:
+                pass
+            else:
+                itr_tran.append(itr)
+                l=len(pts['start_points'])
+                tran_count+=l
+        
+        return {'count':tran_count,'itr':itr_tran}
+            
+
+
     def compute_coverage(self, df, start, stop):
         """ [OUTDATED]Computes coverage for each transition in a given iteration.
             This uses global order data. New function 'compute_coverage_nc()' is already 
@@ -167,7 +193,7 @@ class AlgoParFull:
             for i, j in zip(start, stop):
                 sync_int.append(j - i + 800)
         
-		# removing zero entries as those means no transition
+        # removing zero entries as those means no transition
         sync_int=[x for x in sync_int if x>0]
 
         return [s_dum * 0.05 for s_dum in sync_int]

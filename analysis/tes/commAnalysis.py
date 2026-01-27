@@ -373,9 +373,9 @@ class CommPercentages:
     def get_avg_comm_particptn(self,df,df_nc):
     
 
-        tran_itr=algo.compute_param_df(df)[0]['itr_tran']
+        tran_itr=algo.compute_num(df)['itr']
         #tran_itr=[0, 1, 2, 5,]
-        threshold = algo.compute_threshold(df)
+        threshold = self.compute_coverage_nc(df,df_nc)[1]
         #threshold=0.39874500541287045 
         
         for itr in tran_itr:
@@ -383,7 +383,9 @@ class CommPercentages:
             pts=algoumap.compute_parameters(df[itr])
             
             # find itr which have partial or full transitions
-            cov=algo.compute_coverage(df[itr], pts['start_points'], pts['stop_points'])
+            # cov=algo.compute_coverage(df[itr], pts['start_points'], pts['stop_points'])
+            
+            cov = self.compute_individual_coverage_nc(df_nc.loc[itr],df[itr])
             ind=algo.compute_num_trans(cov,threshold)
             part_ind=ind['part_ind']
             full_ind=ind['full_ind']
@@ -416,7 +418,8 @@ class CommPercentages:
                 i+=1
 
     def compute_coverage_nc(self,df,df_nc):
-        tran_itr=algo.compute_param_df(df)[0]['itr_tran']
+        # finding out iteration numbers which have transitions
+        tran_itr=algo.compute_num(df)['itr']
         total_coverage=[]
 
         for itr in tran_itr:
@@ -464,7 +467,7 @@ class CommPercentages:
             df_go_itr (dataframe): global order dataframe of iteration (1 x timesteps)
 
         Returns:
-            float: Coverage of that particular iteration
+            list: Coverage of all transitions in that particular iteration
         """
 
         pts = algoumap.compute_parameters(df_go_itr)
