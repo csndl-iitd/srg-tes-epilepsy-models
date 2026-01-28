@@ -406,12 +406,12 @@ class CommPercentages:
                 if i in part_ind:
                     #print(df_gc)
                     
-                    self.store_part_data(df_gc)
+                    self.store_part_data(df_gc[0])
                     print(itr,i)
 
                 else:
                     #print(df_gc)
-                    self.store_full_data(df_gc)
+                    self.store_full_data(df_gc[0])
                     print(itr,i)
 
                 c+=5000
