@@ -55,12 +55,17 @@ class CommPercentages:
         self.part_hind_per=[]
 
     
+    # function to reset object when required
+    def reset(self):
+        """Clear all stored participation lists."""
+        self.__init__()
+        
     def get_crossing_go(self,df, pts):
         """Get start and stop points where global order is 90%
 
         Args:
-            df (dataframe): Global order dataframe of timesteps x iterations
-            pts (dictionary): Start and Stop points of transition
+            df (dataframe): Global order dataframe of timesteps x 1
+            pts (dictionary): Start and Stop points of all transitions in that iteration
             
 
         Returns:
@@ -371,6 +376,15 @@ class CommPercentages:
                 }
         
     def get_avg_comm_particptn(self,df,df_nc):
+        """Computes average community participation
+
+        Args:
+            df (_type_): _description_
+            df_nc (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
     
 
         tran_itr=algo.compute_num(df)['itr']
@@ -378,6 +392,11 @@ class CommPercentages:
         threshold = self.compute_coverage_nc(df,df_nc)[1]
         #threshold=0.39874500541287045 
         
+        # to store iteration number and the index of transition
+        # append tuples (itr,index) directly in these 
+        # the index of each tuple will map with row of comm. participation
+        part_itr=[]
+        full_itr=[]
         for itr in tran_itr:
             # find start stop points of transition
             pts=algoumap.compute_parameters(df[itr])
@@ -395,11 +414,11 @@ class CommPercentages:
             
             # iterating over node community data
             nc_lim=df_nc.loc[itr].shape[0]/5000
-            ind=list(range(0,int(nc_lim)))
+            ind_nc=list(range(0,int(nc_lim)))
 
             i=0
             c=5000
-            while i<len(ind):
+            while i<len(ind_nc):
                 df_dum=df_nc.loc[itr].iloc[i*5000:c]
                 df_bm=self.get_binairized_matrix(df_dum,comm_pts['start_comm'][i])
                 df_gc=self.get_community_percentage( comm_pts['start_comm'][i], comm_pts['stop_comm'][i], df_bm)
@@ -407,15 +426,16 @@ class CommPercentages:
                     #print(df_gc)
                     
                     self.store_part_data(df_gc[0])
-                    print(itr,i)
+                    part_itr.append((itr,i))
 
                 else:
                     #print(df_gc)
                     self.store_full_data(df_gc[0])
-                    print(itr,i)
+                    full_itr.append((itr,i))
 
                 c+=5000
                 i+=1
+        return {'part_ind':part_itr,'full_ind':full_itr}
 
     def compute_coverage_nc(self,df,df_nc):
         # finding out iteration numbers which have transitions
