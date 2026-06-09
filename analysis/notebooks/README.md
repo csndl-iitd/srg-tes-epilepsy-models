@@ -1,105 +1,25 @@
 # Description of notebooks
 
-### In-progress notebooks  
+#### 1. ata Extraction.ipynb  
+This shows how to use predefined functions in package to extract global order data, Local Order Data and Node Community Data from the model  
 
-#### 1. Analyse Time of Entry 
-#### 2. Analyse Node Communities
-#### 3. Parallel Order Extraction
+#### 2. Analyse Rich Club.ipynb
+This shows how rich club nodes were identified in the network  
 
+#### 3. Analyse Calculate Final Params.ipynb  
+This shows how to use predefined functions to calculate parameters
 
-### Analysis notebooks
-Notebooks with name starting with 'Analyse' are for analysis purpose only. Listing analysis notebooks here:
+#### 4. Analyse Subtype Backtrack.ipynb  
+This shows how to find out subtypes and further analysis
 
-#### 1. Analyse Global Order (Done)
-- Data used: 'itr_test.bz2'  
+#### 5. Analyse Fit FPT ST error  
+This shows biexponential fit for FPT and ST  
 
-- Usage:  
-All computation done for iteration number 5 in above data (one can change iteration number by changing value of n). This notebook does following:  
-1. Smooth the data  
-2. Calculate Transition Time  
-3. Calculate Sync Time  
-4. Calculate number of transitions
-5. Plot global order vs time with crossing marked
+#### 6. Analyse Random Forest and SHAM
+This shows SHAM analysis
 
-#### 2. Analyse Parameter (Done)
-- Data used: processed (data with 1000 iterations)
-- Usage: 
-1. Compute transition time, sync time and number of transitions/100 iterations  
-2. Plot transition time, sync time and number of transitions/100 iterations  
-3. Store above parameters as pickle file
-4. Note for sync state time
+#### 7. Analyse Final Figures  
+This shows all the figures presented in paper. This is a fully working notebook with data provided
 
-#### 3. Analyse Time of Entry (Done)
--Data used: Node communities data from raw for all networks
-- Usage:
-1. Compute time of entry and plot the comparision among various networks
-2. Compute Time of Entry of nodes based on first time they enter the main cluster
-3. You can compute median TOE or avg TOE
-4. Arrange nodes by their communities and plot them
-5. Use Avinash color scheme for communities as well as different colors for plots
-
-#### 4. Analyse Control Nodes (in Progress)
-- Data used: Control nodes in 'raw/check_control' and random nodes in 'raw/random_nodes'
-1. Compute and plot parameters for control nodes and random nodes
-2. Plot TOE for control and random nodes
-
-#### 5. Analyse Centrality (in Progress)
-- Usage: Compute network measures for Brain Network
-- Data used: Betweenness centrality data in folder 'raw/random' and connector hubs from 'raw/check_connector'
-1. 1. Betweenness Centrality descending order data plot over number of transitions
-2. Articulation point: No point
-3. Centrality measures: 1. Betweenness Centrality 2. Eigen Vector Centrality 3. Degree Centrality 4. Nodal Efficiency
-4. Time of Entry
-5. Nodes on MTS vs Degree plot with color varying with centrality measures and size according to number of transitions (Lower the number of transitions larger the node size)  
-
-
-#### 6. Analyse Sync State Time (in progress)
-
-
-
-#### 7. Analyse Node Communities (in progress)
-
-
-#### 8. Analyse Summary (in progress)
-
-
-#### 9. Scratch (in progress)
-
-
-### Utility Notebooks  
-Use these notebooks to know how to extract necessary data
-Use 'GO_extraction' to extract global order data  
-Use 'NC_extraction' to extract node community data
-
-#### 1. Automate Order Extraction
-- Usage:
-Computes global and local order data (for transition window of size 5000 timesteps). Stores in data folder.  
-1. Extract Global Order Data
-2. Extract Local Order Data
-3. Store in data folder
-4. Gives count of number of transitions
-
-#### 2. Cluster Track
-- Usage:
-Plot cluster formation and extract node communities.  
-1. Run cluster track  
-2. Plot cluster  
-3. Extract node communities
-
-
-#### 3. Node Community Extraction
-- Usage:  
-Extract and store node community data for a given set of local order dataframes
-
-
-### Test Notebooks
-Utility notebooks are tested and verified
-#### Test
-Data used for test:  
-1. Global Order   - itr_test.bz2  
-2. Local Order    - loc_test.bz2
-3. Node community - nc_test.bz2
-
-#### 1. Test Automatic Order Extraction
-#### 2. Test Node Community Extraction
-#### 3. Test Parameter Algo
+#### 8. Analyse Supplementary Figures
+This shows AIC / BIC analysis
