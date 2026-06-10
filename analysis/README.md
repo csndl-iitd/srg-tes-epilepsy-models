@@ -1,8 +1,10 @@
-# Project title
+# Multiple coexisting pathways to synchronization shape seizure dynamics in a mesoscale mouse brain model
  
 
 Notes: Use python 3.10
-Env is umap310 using conda
+1. Preferably create virtual environment using Conda
+2.     pip install -r requirements.txt
+3. Get inside analysis folder
+4.     pip install -e .
 
 
-Detailed description for using your code and how it works should go here. At the end of the project, anyone should be able to reproduce your results by following the instructions in this README.
