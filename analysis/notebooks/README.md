@@ -1,6 +1,6 @@
 # Description of notebooks
 
-#### 1. ata Extraction.ipynb  
+#### 1. Analyse Raw Data Extraction.ipynb  
 This shows how to use predefined functions in package to extract global order data, Local Order Data and Node Community Data from the model  
 
 #### 2. Analyse Rich Club.ipynb
