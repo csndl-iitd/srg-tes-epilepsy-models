@@ -12,3 +12,4 @@ black[jupyter]
 ipykernel
 umap-learn
 pwlf==2.5.2
+statsmodels
