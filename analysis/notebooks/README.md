@@ -1,6 +1,6 @@
 # Description of notebooks
 
-#### 1. Simulation Raw Data Extraction.ipynb  
+#### 1. Simulate Raw Data Extraction.ipynb  
 This shows how to simulate model to extract global order data, Local Order Data and Node Community Data
 
 #### 2. Analyse Rich Club.ipynb
